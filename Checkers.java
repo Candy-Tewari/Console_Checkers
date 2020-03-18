@@ -40,7 +40,6 @@ public class Checkers {
     private void optionListener()throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int choice = Integer.parseInt(br.readLine());
-        br.close();
         switch (choice) {
             case 1:
                 System.out.println("This checkers game is developed by: Shobhit Tewari");
@@ -156,7 +155,6 @@ public class Checkers {
             writeDataToFile(player1, player2, startTime, endTime, date); //white has won which is the first player
         else
             writeDataToFile(player2, player1, startTime, endTime, date); //black has won which is the second player
-        br.close();
     }
     public static void main(String args[])throws IOException{
         Checkers checkers = new Checkers();
