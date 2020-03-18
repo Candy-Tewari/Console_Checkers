@@ -177,14 +177,14 @@ class CheckerPlayGame{
 
         for(int i=5;i<8;i++){
             for(int j=0;j<8;j++){
-                if((i+j)%2!=0)
+                if(((i+j)%2)!=0)
                     board[i][j]="WP";
                 else
                     board[i][j]="--";
             }
         }
 
-        for(int i=3;i<=5;i++)
+        for(int i=3;i<5;i++)
             for(int j=0;j<8;j++)
                 board[i][j]="--";
     }
@@ -243,11 +243,11 @@ class CheckerPlayGame{
     public int startTheGame(){
         setTheBoard();
         printBoard();
-       while(true){
+       //while(true){
            //This loop will conitnue working until and unless 1 player has won
            //Input be of the type -> "a2 to b3. From (file)(rank) to (file)(rank)"
            //Here all the logic of playing shall execute
-       }
+       //}
        //Just return 0 if white has won and 1 if black has won
        return 0; //0 indicates that white has won and 1 indicates that black has won
     }
