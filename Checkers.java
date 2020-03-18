@@ -3,13 +3,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.util.Date;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Scanner;
 
 public class Checkers {
     private void showMenu() {
@@ -18,8 +17,8 @@ public class Checkers {
                                                                                                               // this,
                                                                                                               // options
                                                                                                               // can be
-                                                                                                              // changes
-                                                                                                              // easier
+                                                                                                              // changed
+                                                                                                              // easier,
                                                                                                               // if
                                                                                                               // needed
         for (int i = 0; i < options.length; i++)
@@ -27,7 +26,7 @@ public class Checkers {
     }
 
     private void printInstructions() {
-        System.out.println("\nINSTRUCTIONS\n");
+        System.out.println("INSTRUCTIONS\n");
         System.out.println(
                 "The goal of Checkers, or \"Draughts\", is to remove all your opponent's pieces from \n the board. Use coordinates (row and column) to move your \n pieces around the board. Your pieces can only move forward one tile diagonally.\n");
         System.out.println(
@@ -35,13 +34,13 @@ public class Checkers {
         System.out.println(
                 "If one of your pieces gets to the opposite side of the board (your opponent's back \n row), it will turn into a King. Kings can move and jump diagonally in any direction \n (remember, your regular pieces can only move forward). Kings can even combine jumps \n forward and backward on the same turn!\n");
         System.out.println(
-                "You win by removing all your opponent's pieces from the board, or if your opponent \n can't make a move. “ - Reference site: https://www.coolmathgames.com/0-checkers\n");
+                "You win by removing all your opponent's pieces from the board, or if your opponent \n can't make a move. “ - Reference site: https://www.coolmathgames.com/0-checkers");
     }
 
-    private void optionListener() {
-        Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
-        sc.close();
+    private void optionListener()throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int choice = Integer.parseInt(br.readLine());
+        br.close();
         switch (choice) {
             case 1:
                 System.out.println("This checkers game is developed by: Shobhit Tewari");
@@ -94,7 +93,6 @@ public class Checkers {
                 System.out.println("Player 1: " + player1 + " -->Winner<--");
                 System.out.println("Player 2:" + player2);
                 System.out.println("Time: " + time);
-                System.out.println('\n');
             }
             bufferedReader.close();
         } catch (Exception e) {
@@ -131,10 +129,6 @@ public class Checkers {
     }
     private void writeDataToFile(String player1, String player2, String startTime, String endTime, String date){ //Assumed player 1 always wins
         try{
-            /*File file = new File("gameResults.txt");
-            if(!file.exists())
-                file.createNewFile();
-            FileOutputStream fileOutputStream = new FileOutputStream(file);*/
             FileWriter fWriter = new FileWriter("gameResults.txt", true);
             BufferedWriter bWriter = new BufferedWriter(fWriter);
             PrintWriter printWriter = new PrintWriter(bWriter);
@@ -146,12 +140,117 @@ public class Checkers {
             e.printStackTrace();
         }
     }
-    private void play(){
-
+    private void play()throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Player 1 will start the game. Game ends when a player is out of moves.");
+        System.out.println("Enter the name of the player 1: ");
+        String player1 = br.readLine();
+        System.out.println("Enter the name of the player 2: ");
+        String player2 = br.readLine();
+        CheckerPlayGame checkerPlayGame = new CheckerPlayGame();
+        String startTime = getTime();
+        int winner = checkerPlayGame.startTheGame();
+        String endTime = getTime();
+        String date = getDate();
+        if(winner==0)
+            writeDataToFile(player1, player2, startTime, endTime, date); //white has won which is the first player
+        else
+            writeDataToFile(player2, player1, startTime, endTime, date); //black has won which is the second player
+        br.close();
     }
-    public static void main(String args[]){
+    public static void main(String args[])throws IOException{
         Checkers checkers = new Checkers();
         checkers.showMenu();
         checkers.optionListener();
+    }
+}
+class CheckerPlayGame{
+    String[][]board = new String[8][8];
+    private void setTheBoard(){
+
+        for(int i=0;i<3;i++){
+            for(int j=0;j<8;j++){
+                if((i+j)%2==0)
+                    board[i][j]="BP";
+                else
+                    board[i][j]="--";
+            }
+        }
+
+        for(int i=5;i<8;i++){
+            for(int j=0;j<8;j++){
+                if((i+j)%2!=0)
+                    board[i][j]="WP";
+                else
+                    board[i][j]="--";
+            }
+        }
+
+        for(int i=3;i<=5;i++)
+            for(int j=0;j<8;j++)
+                board[i][j]="--";
+    }
+
+    private void printBoard(){
+        System.out.print("   ");
+        for(int i=1;i<=33;i++)
+            System.out.print("–");
+        System.out.println();
+        System.out.print("    ");
+        
+        for(int i=0;i<=21;i++){
+            if(i%3==0){
+                String value=""+(char)(65+(i/3))+" ";
+                System.out.print(value);
+            }
+            else{
+                System.out.print(" ");
+            }
+        }
+        System.out.println();
+        System.out.print("   ");
+        for(int i=1;i<=33;i++)
+            System.out.print("–");
+        System.out.println();
+        System.out.print("|1| ");
+        for(int i=0;i<8;i++){
+            for(int j=0;j<8;j++)
+                System.out.print(board[i][j]+"  ");
+            System.out.print("|"+(i+1)+"|");
+            System.out.println();
+            if(i!=7)
+                System.out.print("|"+(i+2)+"| ");
+        }
+        System.out.print("   ");
+        for(int i=1;i<=33;i++)
+            System.out.print("–");
+        System.out.println();
+        System.out.print("    ");
+        
+        for(int i=0;i<=21;i++){
+            if(i%3==0){
+                String value=""+(char)(65+(i/3))+" ";
+                System.out.print(value);
+            }
+            else{
+                System.out.print(" ");
+            }
+        }
+        System.out.println();
+        System.out.print("   ");
+        for(int i=1;i<=33;i++)
+            System.out.print("–");
+        System.out.println();
+    }
+    public int startTheGame(){
+        setTheBoard();
+        printBoard();
+       while(true){
+           //This loop will conitnue working until and unless 1 player has won
+           //Input be of the type -> "a2 to b3. From (file)(rank) to (file)(rank)"
+           //Here all the logic of playing shall execute
+       }
+       //Just return 0 if white has won and 1 if black has won
+       return 0; //0 indicates that white has won and 1 indicates that black has won
     }
 }
