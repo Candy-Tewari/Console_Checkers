@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 
 public class Checkers{
     private void showMenu() {
@@ -167,6 +168,7 @@ public class Checkers{
         checkers.optionListener();
     }
 }
+
 class CheckerPlayGame{
     String[][]board = new String[8][8];
     ArrayList<Piece> allPieces=new ArrayList<>();
@@ -301,7 +303,10 @@ class CheckerPlayGame{
             }
             //This Iterates over the complete ArrayList of Pieces and finds which piece position refers to the old position
             // Then it Makes a move and gives turn to other if move is legal else give you again turn
-            for (Piece p:allPieces)
+
+
+            ArrayList<Piece>allPiece=(ArrayList<Piece>)allPieces.clone();
+            for (Piece p:allPiece)
             {
              //This checks piece type and whose turn is
                 if((p.getType() == PieceType.BLACK) && !white_turn)
@@ -324,8 +329,8 @@ class CheckerPlayGame{
                 {
                     if(p.getPosition()==old_position)
                     {
-                        System.out.println(p.toString());
-                        System.out.println(p.getLegalMoves(board));
+//                        System.out.println(p.toString());
+//                        System.out.println(p.getLegalMoves(board));
                         if(!p.Move(new_position,this,allPieces))
                         {
                             System.out.println("Wrong Move");
